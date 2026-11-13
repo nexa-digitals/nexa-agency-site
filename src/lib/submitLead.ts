@@ -12,17 +12,40 @@ export interface LeadForm {
   readyToStart: string
 }
 
+/** Must match the `name` of the hidden form in index.html. */
+const NETLIFY_FORM_NAME = 'lead'
+
 /**
- * TODO: connect the lead form.
+ * Sends the lead form to Netlify Forms.
  *
- * In the portal this called the Convex action `zoho.sendToZoho`, which forwards
- * the form to a Zoho CRM webhook. This standalone site has no backend yet, so
- * submissions go nowhere. When you decide on a destination, implement it here
- * and return true on success. Nothing else in the page needs to change.
+ * Netlify registers the form from the hidden copy in index.html at deploy time,
+ * then accepts urlencoded POSTs to any page with a matching `form-name`.
+ * Submissions appear under Forms → "lead" in the Netlify dashboard.
  *
- * Returning false makes the page tell the visitor to email us instead, so no
- * lead is silently lost.
+ * `botField` is the honeypot: real visitors never see that input, so if it has a
+ * value the submission is from a bot and Netlify silently drops it.
+ *
+ * Returns true on success. On false the page tells the visitor to email us
+ * instead, so no lead is silently lost.
  */
-export async function submitLead(_form: LeadForm): Promise<boolean> {
-  return false
+export async function submitLead(form: LeadForm, botField = ''): Promise<boolean> {
+  // Netlify Forms only exists on Netlify. The Vite dev server would answer the
+  // POST with index.html and fake a success, so don't pretend locally.
+  if (import.meta.env.DEV) {
+    console.info('[submitLead] Netlify Forms only works on a Netlify deploy. Lead not sent:', form)
+    return false
+  }
+
+  const body = new URLSearchParams({
+    'form-name': NETLIFY_FORM_NAME,
+    'bot-field': botField,
+    ...form,
+  })
+
+  const res = await fetch('/', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: body.toString(),
+  })
+  return res.ok
 }

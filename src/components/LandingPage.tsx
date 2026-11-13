@@ -93,9 +93,11 @@ function LandingPage({ onNavigate }: LandingPageProps) {
     if (submitting) return;
     setSubmitting(true);
 
+    const botField = String(new FormData(e.currentTarget as HTMLFormElement).get('bot-field') ?? '');
+
     let ok = false;
     try {
-      ok = await submitLead(formData);
+      ok = await submitLead(formData, botField);
     } catch (error) {
       console.error('Lead submission failed:', error);
     } finally {
@@ -560,7 +562,13 @@ function LandingPage({ onNavigate }: LandingPageProps) {
                 Join hundreds of ambitious organizations that trust Nexa Digital to build their most critical digital infrastructure.
               </p>
               
-              <form onSubmit={handleContactSubmit} className='space-y-6'>
+              <form name='lead' onSubmit={handleContactSubmit} className='space-y-6'>
+                {/* Spam honeypot: hidden from people, bots fill it in. */}
+                <p className='hidden' aria-hidden='true'>
+                  <label>
+                    Don't fill this out: <input name='bot-field' tabIndex={-1} autoComplete='off' />
+                  </label>
+                </p>
                 {/* Basic Information */}
                 <div>
                   <h3 className='text-base font-bold text-foreground mb-4 border-b pb-1.5 uppercase tracking-wider text-primary/80'>Basic Information</h3>

@@ -33,11 +33,23 @@ Netlify/Cloudflare Pages and Apache hosts.
 
 These are copies. Editing services in the portal's admin panel does **not** update this site.
 
-## Not done yet
+## Contact form (Netlify Forms)
 
-- **Lead form is not connected.** `src/lib/submitLead.ts` is a stub that returns
-  `false`, so visitors are told to email `info@nexadigital.com.ng` instead.
-  In the portal the form went to Zoho CRM via a Convex action. Implement
-  `submitLead()` once a destination is chosen.
-- **Client Login** button is hidden until `VITE_PORTAL_URL` is set in `.env`
-  (see `.env.example`).
+The "Get in Touch" form submits to **Netlify Forms** as the form named `lead`.
+
+- A hidden copy of the form in `index.html` lets Netlify register it at deploy time.
+  If you add or rename a field, update it there **and** in `src/lib/submitLead.ts`.
+- Submissions show up in Netlify under **Forms → lead**. Set up email alerts under
+  **Site configuration → Notifications → Emails and webhooks → Form submission notifications**.
+- If **Forms** is disabled for the site, enable form detection and redeploy.
+- A hidden `bot-field` honeypot filters out basic spam.
+- It only works on a Netlify deploy. With `npm run dev` the form logs the lead to the
+  console and tells you to email instead.
+
+In the portal this form went to Zoho CRM. To send leads to Zoho as well, add a
+Netlify form-submission webhook or a small Netlify Function.
+
+## Client Login
+
+The "Client Login" button is hidden until `VITE_PORTAL_URL` is set (in `.env`
+locally, or in Netlify's environment variables). See `.env.example`.

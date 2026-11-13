@@ -7,6 +7,25 @@
     <title>Nexa Digital</title>
   </head>
   <body>
+    <!--
+      Netlify Forms: Netlify scans the built HTML at deploy time to register forms.
+      The real form is rendered by React, so this hidden copy declares the form name
+      and fields. Keep the field names in sync with src/lib/submitLead.ts.
+    -->
+    <form name="lead" data-netlify="true" netlify-honeypot="bot-field" hidden>
+      <input type="text" name="name" />
+      <input type="text" name="companyName" />
+      <input type="email" name="email" />
+      <input type="text" name="phone" />
+      <input type="text" name="source" />
+      <input type="url" name="websiteUrl" />
+      <input type="text" name="service" />
+      <input type="text" name="goal" />
+      <textarea name="challenge"></textarea>
+      <input type="text" name="budget" />
+      <input type="text" name="readyToStart" />
+      <input type="text" name="bot-field" />
+    </form>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
