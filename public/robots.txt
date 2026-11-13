@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /_convex/
+Disallow: /api/
+
+Sitemap: https://nexadigital.com/sitemap.xml

@@ -1,0 +1,13 @@
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "22"
+
+# Single-page app: serve index.html for /portfolio, /privacy, /terms, etc.
+# (public/_redirects does the same; this keeps it explicit.)
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
